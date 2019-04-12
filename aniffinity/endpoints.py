@@ -2,6 +2,7 @@
 
 
 import re
+import time
 import warnings
 
 import json_api_doc
@@ -287,7 +288,10 @@ def myanimelist(username):
             ENDPOINT_URLS.MYANIMELIST.format(username=username),
             params=params
         )
-
+        
+        # sleep to make sure we don't exceed rate limit
+        time.sleep(2)
+        
         if resp.status_code == TOO_MANY_REQUESTS:  # pragma: no cover
             raise RateLimitExceededError("MyAnimeList rate limit exceeded")
 
@@ -307,7 +311,7 @@ def myanimelist(username):
 
             if score > 0:
                 scores[id] = score
-
+      
         list_entries = len(json)
         params["offset"] += 300
 
